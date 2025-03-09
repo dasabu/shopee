@@ -9,6 +9,7 @@ import { AppContext } from '@/contexts/app.context'
 import { useContext } from 'react'
 import ProductDetail from '@/pages/ProductDetail'
 import Cart from '@/pages/Cart'
+import CartLayout from '@/layouts/CartLayout'
 
 /* đã login/register */
 function ProtectedRoute() {
@@ -57,9 +58,9 @@ export default function useRoutesElements() {
         {
           path: '/cart',
           element: (
-            <MainLayout>
+            <CartLayout>
               <Cart />
-            </MainLayout>
+            </CartLayout>
           )
         }
       ]

@@ -21,13 +21,13 @@ export const getPurchaseListApi = (params: { status: PurchaseListStatus }) => {
 
 export const buyProductsApi = (body: PurchaseRequest[]) => {
   return axiosInstance.post<SuccessResponse<Purchase[]>>(
-    '/purchases/buy-product',
+    '/purchases/buy-products',
     body
   )
 }
 
 // Update purchases in cart
-export const updatePurchase = (body: PurchaseRequest) => {
+export const updatePurchaseApi = (body: PurchaseRequest) => {
   return axiosInstance.put<SuccessResponse<Purchase>>(
     '/purchases/update-purchase',
     body
@@ -35,7 +35,7 @@ export const updatePurchase = (body: PurchaseRequest) => {
 }
 
 // Delete purchases in cart
-export const deletePurchase = (purchaseIds: string[]) => {
+export const deletePurchaseApi = (purchaseIds: string[]) => {
   return axiosInstance.delete<SuccessResponse<{ deleted_count: number }>>(
     '/purchases',
     {
