@@ -1,14 +1,15 @@
-import { getPurchaseListApi } from '@/apis/purchase.api'
+import { getPurchaseListApi, updatePurchase } from '@/apis/purchase.api'
 import { PURCHASES_STATUS } from '@/utils/constants'
 import { formatCurrency } from '@/utils/product'
 import { generateSlug } from '@/utils/slug'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
 import QuantityController from '../ProductDetail/components/QuantityController'
 import Button from '@/components/Button'
 import { Purchase } from '@/types/purchase.type'
 import { useEffect, useState } from 'react'
 import { produce } from 'immer'
+import { keyBy } from 'lodash'
 
 interface ExtendedPurchases extends Purchase {
   checked: boolean
@@ -16,7 +17,7 @@ interface ExtendedPurchases extends Purchase {
 }
 
 export default function Cart() {
-  const { data: purchasesInCartData } = useQuery({
+  const { data: purchasesInCartData, refetch } = useQuery({
     queryKey: ['purchases', { status: PURCHASES_STATUS.IN_CART }],
     queryFn: () => getPurchaseListApi({ status: PURCHASES_STATUS.IN_CART })
   })
@@ -29,20 +30,26 @@ export default function Cart() {
     ExtendedPurchases[]
   >([])
   useEffect(() => {
-    setPurchasesExtended(
-      purchasesInCartData?.data.data.map((purchase) => ({
-        ...purchase,
-        checked: false,
-        disabled: false
-      })) || []
-    )
+    setPurchasesExtended((prev) => {
+      const extendedPurchaseObj = keyBy(prev, '_id')
+      return (
+        purchasesInCartData?.data.data.map((purchase) => ({
+          ...purchase,
+          checked: Boolean(extendedPurchaseObj[purchase._id]?.checked), // giữ nguyên trạng thái checked khi refetch
+          disabled: false
+        })) || []
+      )
+    })
   }, [purchasesInCartData?.data.data])
 
+  /**
+   * Handle check
+   */
   const handleChecked =
-    (productId: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    (purchaseIndex: number) => (event: React.ChangeEvent<HTMLInputElement>) => {
       setPurchasesExtended(
         produce((draft) => {
-          draft[productId].checked = event.target.checked
+          draft[purchaseIndex].checked = event.target.checked
         })
       )
     }
@@ -57,6 +64,45 @@ export default function Cart() {
     )
   }
 
+  /**
+   * Update quantity
+   */
+  const updatePurchaseMutation = useMutation({
+    mutationFn: updatePurchase,
+    onSuccess: () => {
+      refetch()
+    }
+  })
+
+  const handleChangeQuantity = (
+    purchaseIndex: number,
+    value: number,
+    enable: boolean
+  ) => {
+    if (enable) {
+      const purchase = purchasesExtended[purchaseIndex]
+      setPurchasesExtended(
+        produce((draft) => {
+          draft[purchaseIndex].disabled = true
+        })
+      )
+      updatePurchaseMutation.mutate({
+        product_id: purchase.product._id,
+        buy_count: value
+      })
+    }
+  }
+
+  const handleTypeQuantity = (purchaseIndex: number) => {
+    return function (value: number) {
+      setPurchasesExtended(
+        produce((draft) => {
+          draft[purchaseIndex].buy_count = value
+        })
+      )
+    }
+  }
+
   return (
     <div className='bg-neutral-100 py-16'>
       <div className='container'>
@@ -68,7 +114,7 @@ export default function Cart() {
                   <div className='flex flex-shrink-0 items-center justify-center pr-3'>
                     <input
                       type='checkbox'
-                      className='h-5 w-5 accent-orange'
+                      className='h-5 w-5 accent-shopee_orange'
                       checked={isCheckedAll}
                       onChange={handleCheckedAll}
                     />
@@ -96,7 +142,7 @@ export default function Cart() {
                       <div className='flex flex-shrink-0 items-center justify-center pr-3'>
                         <input
                           type='checkbox'
-                          className='h-5 w-5 accent-orange'
+                          className='h-5 w-5 accent-shopee_orange'
                           checked={purchase.checked}
                           onChange={handleChecked(index)}
                         />
@@ -150,6 +196,29 @@ export default function Cart() {
                           max={purchase.product.quantity}
                           value={purchase.buy_count}
                           classNameWrapper='flex items-center'
+                          onIncrease={(value) =>
+                            handleChangeQuantity(
+                              index,
+                              value,
+                              value <= purchase.product.quantity
+                            )
+                          }
+                          onDecrease={(value) =>
+                            handleChangeQuantity(index, value, value >= 1)
+                          }
+                          onType={handleTypeQuantity(index)}
+                          onFocusOut={(value) =>
+                            handleChangeQuantity(
+                              index,
+                              value,
+                              value >= 1 &&
+                                value < purchase.product.quantity &&
+                                value !==
+                                  purchasesInCartData!.data.data[index]
+                                    .buy_count
+                            )
+                          }
+                          disabled={purchase.disabled}
                         />
                       </div>
                       <div className='col-span-1'>
