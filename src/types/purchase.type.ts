@@ -20,3 +20,8 @@ export interface PurchaseRequest {
   product_id: string
   buy_count: number
 }
+
+export interface ExtendedPurchases extends Purchase {
+  checked: boolean
+  disabled: boolean
+}

@@ -8,45 +8,54 @@ import { PURCHASES_STATUS } from '@/utils/constants'
 import { formatCurrency } from '@/utils/product'
 import { generateSlug } from '@/utils/slug'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import QuantityController from '../ProductDetail/components/QuantityController'
 import Button from '@/components/Button'
-import { Purchase } from '@/types/purchase.type'
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useMemo } from 'react'
 import { produce } from 'immer'
 import { keyBy } from 'lodash'
 import { toast } from 'react-toastify'
-
-interface ExtendedPurchases extends Purchase {
-  checked: boolean
-  disabled: boolean
-}
+import { AppContext } from '@/contexts/app.context'
 
 export default function Cart() {
   const { data: purchasesInCartData, refetch } = useQuery({
     queryKey: ['purchases', { status: PURCHASES_STATUS.IN_CART }],
     queryFn: () => getPurchaseListApi({ status: PURCHASES_STATUS.IN_CART })
   })
+  const location = useLocation()
+  const purchaseIdFromLocation = (
+    location.state as { purchaseId: string } | null
+  )?.purchaseId
 
   /**
    * Cần thêm 2 properties checked và disabled vào mỗi item trong purchasesInCartData được fetch về
    * nên tạo nên 1 state mới purchasesExtend để quản lý các item đó và cùng với các properties mới
+   * !Update: dời state này qua Context API để khi chuyển route quay lại không bị mất state (cụ thể là checked)
    */
-  const [purchasesExtended, setPurchasesExtended] = useState<
-    ExtendedPurchases[]
-  >([])
+  const { purchasesExtended, setPurchasesExtended } = useContext(AppContext)
   useEffect(() => {
     setPurchasesExtended((prev) => {
       const extendedPurchaseObj = keyBy(prev, '_id')
       return (
-        purchasesInCartData?.data.data.map((purchase) => ({
-          ...purchase,
-          checked: Boolean(extendedPurchaseObj[purchase._id]?.checked), // giữ nguyên trạng thái checked khi refetch
-          disabled: false
-        })) || []
+        purchasesInCartData?.data.data.map((purchase) => {
+          // Kiểm tra xem purchase này có đến từ ProblemDetail không
+          const isPurchaseIdFromLocation =
+            purchaseIdFromLocation === purchase._id
+          return {
+            ...purchase,
+            checked:
+              isPurchaseIdFromLocation ||
+              Boolean(extendedPurchaseObj[purchase._id]?.checked), // giữ nguyên trạng thái checked khi refetch
+            disabled: false
+          }
+        }) || []
       )
     })
-  }, [purchasesInCartData?.data.data])
+  }, [
+    purchasesInCartData?.data.data,
+    purchaseIdFromLocation,
+    setPurchasesExtended
+  ])
 
   /**
    * Handle check
@@ -60,7 +69,10 @@ export default function Cart() {
       )
     }
 
-  const isCheckedAll = purchasesExtended.every((purchase) => purchase.checked)
+  const isCheckedAll = useMemo(
+    () => purchasesExtended.every((purchase) => purchase.checked),
+    [purchasesExtended]
+  )
   const handleCheckedAll = () => {
     setPurchasesExtended((prev) =>
       prev.map((purchase) => ({
@@ -130,8 +142,9 @@ export default function Cart() {
   /**
    * Delete
    */
-  const checkedPurchases = purchasesExtended.filter(
-    (purchase) => purchase.checked
+  const checkedPurchases = useMemo(
+    () => purchasesExtended.filter((purchase) => purchase.checked),
+    [purchasesExtended]
   )
   const handleDelete = (purchaseIndex: number) => () => {
     const purchaseId = purchasesExtended[purchaseIndex]._id
@@ -159,16 +172,31 @@ export default function Cart() {
   /**
    * Calculate Price
    */
-  const paymentPrice = checkedPurchases.reduce((result, current) => {
-    return result + current.product.price * current.buy_count
-  }, 0)
-  const savingPrice = checkedPurchases.reduce((result, current) => {
-    return (
-      result +
-      (current.product.price_before_discount - current.product.price) *
-        current.buy_count
-    )
-  }, 0)
+  const paymentPrice = useMemo(
+    () =>
+      checkedPurchases.reduce((result, current) => {
+        return result + current.product.price * current.buy_count
+      }, 0),
+    [checkedPurchases]
+  )
+  const savingPrice = useMemo(
+    () =>
+      checkedPurchases.reduce((result, current) => {
+        return (
+          result +
+          (current.product.price_before_discount - current.product.price) *
+            current.buy_count
+        )
+      }, 0),
+    [checkedPurchases]
+  )
+
+  // Reset state when reload (F5) page
+  useEffect(() => {
+    return function () {
+      window.history.replaceState(null, '')
+    }
+  })
 
   return (
     <div className='bg-neutral-100 py-16'>
