@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import DOMPurify from 'dompurify'
 
@@ -17,6 +17,8 @@ export default function ProductDetail() {
   const { slug } = useParams()
   const id = getIdFromSlug(slug as string)
 
+  const navigate = useNavigate()
+
   /**
    * Product Detail
    */
@@ -25,7 +27,6 @@ export default function ProductDetail() {
     queryFn: () => getProductDetailApi(id as string)
   })
   const product = productDetailData?.data.data
-
 
   /**
    * Similar products
@@ -51,7 +52,6 @@ export default function ProductDetail() {
      */
     staleTime: 3 * 60 * 1000 // 3 mins
   })
-
 
   /**
    * Slider
@@ -143,6 +143,15 @@ export default function ProductDetail() {
       product_id: product!._id,
       buy_count: quantity
     })
+  }
+
+  const buyNow = async () => {
+    const response = await addToCartMutation.mutateAsync({
+      product_id: product!._id,
+      buy_count: quantity
+    })
+    const purchase = response.data.data
+    navigate('/cart', { state: { purchaseId: purchase._id } })
   }
 
   if (!product) return null
@@ -322,7 +331,10 @@ export default function ProductDetail() {
                   </svg>
                   Thêm vào giỏ hàng
                 </button>
-                <button className='fkex ml-4 h-12 min-w-[5rem] items-center justify-center rounded-sm bg-shopee_orange px-5 capitalize text-white shadow-sm outline-none hover:bg-shopee_orange/90'>
+                <button
+                  onClick={buyNow}
+                  className='fkex ml-4 h-12 min-w-[5rem] items-center justify-center rounded-sm bg-shopee_orange px-5 capitalize text-white shadow-sm outline-none hover:bg-shopee_orange/90'
+                >
                   Mua ngay
                 </button>
               </div>

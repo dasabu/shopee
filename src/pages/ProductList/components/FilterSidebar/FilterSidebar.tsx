@@ -143,29 +143,28 @@ export default function FilterSidebar({
             <Controller
               control={control}
               name='price_min'
-              render={({ field }) => {
-                return (
-                  <InputNumber
-                    onChange={(event) => {
-                      field.onChange(event)
-                      /** Khi cả price_min và price_max đều bị error (để trống cả 2 rồi submit)
-                       * Sau đó nhập 1 trong 2 thì chỉ có thằng được nhập re-validate
-                       * Thông báo lỗi vẫn tồn tại, mặc dù lúc đó price range đã hợp lệ (chỉ cần 1 trong 2 có giá trị)
-                       * Cần validate lại cả 2: sử dụng trigger(<tên field>) để ép field đó validate lại
-                       **/
-                      trigger('price_max')
-                    }}
-                    value={field.value}
-                    type='text'
-                    className='grow'
-                    name='from'
-                    placeholder='₫ TỪ'
-                    classNameInput='p-1 w-full outline-none border border-gray-300 focus:border-gray-500 rounded-sm focus:shadow-sm'
-                    classNameError='hidden'
-                    ref={field.ref}
-                  />
-                )
-              }}
+              render={({ field }) => (
+                <InputNumber
+                  onChange={(event) => {
+                    field.onChange(event)
+                    /* 
+                    Khi cả price_min và price_max đều bị error (để trống cả 2 rồi submit)
+                    Sau đó nhập lại 1 trong 2 thì chỉ có thằng được nhập re-validate
+                    Thông báo lỗi vẫn tồn tại, mặc dù lúc đó price range đã hợp lệ (chỉ cần 1 trong 2 có giá trị)
+                    => Cần validate lại cả 2: sử dụng trigger(<tên field>) để ép field đó validate lại 
+                    */
+                    trigger('price_max')
+                  }}
+                  value={field.value}
+                  type='text'
+                  className='grow'
+                  name='from'
+                  placeholder='₫ TỪ'
+                  classNameInput='p-1 w-full outline-none border border-gray-300 focus:border-gray-500 rounded-sm focus:shadow-sm'
+                  classNameError='hidden'
+                  ref={field.ref}
+                />
+              )}
             />
 
             <div className='mx-2 mt-2 shrink-0'>-</div>

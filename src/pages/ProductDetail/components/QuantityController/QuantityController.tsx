@@ -1,10 +1,12 @@
 import InputNumber, { InputNumberProps } from '@/components/InputNumber'
+import { useState } from 'react'
 
 interface QuantityControllerProps extends InputNumberProps {
   max?: number
   onIncrease?: (value: number) => void
   onDecrease?: (value: number) => void
   onType?: (value: number) => void
+  onFocusOut?: (value: number) => void
   classNameWrapper?: string
 }
 
@@ -13,10 +15,13 @@ export default function QuantityController({
   onIncrease,
   onDecrease,
   onType,
+  onFocusOut,
   classNameWrapper = 'ml-10',
   value,
   ...rest
 }: QuantityControllerProps) {
+  const [localValue, setLocalValue] = useState<number>(Number(value || 0))
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     let _value = Number(event.target.value)
     // reset giá trị trong input về max khi nhập > max và < 1
@@ -27,26 +32,35 @@ export default function QuantityController({
     }
     if (onType) {
       onType(_value)
+      setLocalValue(_value)
     }
   }
 
   const handleIncrease = () => {
-    let _value = Number(value) + 1
+    let _value = Number(value || localValue) + 1
     if (max && _value > max) {
       _value = max
     }
     if (onIncrease) {
       onIncrease(_value)
+      setLocalValue(_value)
     }
   }
 
   const handleDecrease = () => {
-    let _value = Number(value) - 1
+    let _value = Number(value || localValue) - 1
     if (_value < 1) {
       _value = 1
     }
     if (onDecrease) {
       onDecrease(_value)
+      setLocalValue(_value)
+    }
+  }
+
+  const handleBlur = (event: React.FocusEvent<HTMLInputElement, Element>) => {
+    if (onFocusOut) {
+      onFocusOut(Number(event.target.value))
     }
   }
 
@@ -78,8 +92,9 @@ export default function QuantityController({
           className=''
           classNameError='hidden'
           classNameInput='h-8 w-14 border-t border-b border-gray-300 p-1 text-center outline-none'
-          value={value}
+          value={value || localValue}
           onChange={handleChange}
+          onBlur={handleBlur}
           {...rest}
         />
         {/* Increase */}
