@@ -12,7 +12,7 @@ import CartLayout from '@/layouts/CartLayout'
 import UserLayout from '@/pages/User/layouts/UserLayout/UserLayout'
 import Profile from '@/pages/User/pages/Profile'
 import ChangePassword from '@/pages/User/pages/ChangePassword'
-import HistoryPurchase from '@/pages/User/pages/HistoryPurchase'
+import PurchaseHistory from '@/pages/User/pages/PurchaseHistory/PurchaseHistory'
 
 /* đã login/register */
 function ProtectedRoute() {
@@ -76,7 +76,7 @@ export default function useRoutesElements() {
             },
             {
               path: '/user/history',
-              element: <HistoryPurchase />
+              element: <PurchaseHistory />
             }
           ]
         }
