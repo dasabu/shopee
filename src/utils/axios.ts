@@ -2,8 +2,7 @@ import { AuthResponse } from '@/types/auth.type'
 import axios, { AxiosError, AxiosInstance } from 'axios'
 import { toast } from 'react-toastify'
 import {
-  clearAccessTokenFromLS,
-  clearProfileFromLS,
+  clearLS,
   getAccessTokenFromLS,
   getProfileFromLS,
   saveAccessTokenToLS,
@@ -57,8 +56,7 @@ class AxiosClient {
         else if (url === '/logout') {
           this.accessToken = ''
           this.profile = null
-          clearAccessTokenFromLS()
-          clearProfileFromLS()
+          clearLS()
         }
         return response
       },
@@ -67,6 +65,12 @@ class AxiosClient {
           const errorResponseData: any = error.response?.data
           const errorMessage = errorResponseData?.message || error.message
           toast.error(errorMessage)
+        }
+        if (error.response?.status === 401) {
+          // clear local storage
+          clearLS()
+          // can use this command to reload page: window.location.reload()
+          // but not recommended
         }
         return Promise.reject(error)
       }

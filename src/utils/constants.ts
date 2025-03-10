@@ -19,3 +19,5 @@ export const PURCHASES_STATUS = {
   DELIVERED: 4,
   CANCELLED: 5
 } as const
+
+export const CLEAR_LS_EVENT = 'clearLS'
