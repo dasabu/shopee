@@ -9,7 +9,7 @@ import InputNumber from '@/components/InputNumber'
 import { userSchema, UserSchema } from '@/utils/validation'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { useContext, useEffect, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import DateSelect from '../../components/DateSelect'
 import { toast } from 'react-toastify'
@@ -17,7 +17,7 @@ import { AppContext } from '@/contexts/app.context'
 import { saveProfileToLS } from '@/utils/auth'
 import { getAvatarUrl } from '@/utils/avatar'
 import { handleAxios422Error } from '@/utils/error'
-import { MAX_FILE_SIZE } from '@/utils/constants'
+import InputFile from '@/components/InputFile'
 
 type ProfileFormData = Pick<
   UserSchema,
@@ -38,12 +38,12 @@ const profileSchema = userSchema.pick([
 
 export default function Profile() {
   const { setProfile } = useContext(AppContext)
-  const fileInputRef = useRef<HTMLInputElement>(null)
   const [file, setFile] = useState<File>()
   const previewImage = useMemo(
     () => (file ? URL.createObjectURL(file) : ''),
     [file]
   )
+
   /**
    * Form declaration
    */
@@ -131,23 +131,8 @@ export default function Profile() {
   /**
    * Upload avatar
    */
-  const handleUploadAvatar = () => {
-    fileInputRef.current?.click()
-  }
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const uploadedFile = event.target.files?.[0]
-    if (uploadedFile) {
-      if (uploadedFile.size >= MAX_FILE_SIZE) {
-        toast.error(
-          'Dung lượng file tải lên vượt quá kích thước cho phép (1 MB)'
-        )
-      } else if (!uploadedFile.type.includes('image')) {
-        toast.error('File không đúng định dạng (.JPG, .JPEG, .PNG)')
-      } else {
-        setFile(uploadedFile)
-      }
-    }
+  const handleFileChange = (file?: File) => {
+    setFile(file)
   }
 
   return (
@@ -258,35 +243,18 @@ export default function Profile() {
         {/* Avatar */}
         <div className='flex justify-center md:w-72 md:border-l md:border-l-gray-200'>
           <div className='flex flex-col items-center'>
+            <div className='mt-3 text-gray-400'>
+              <div>Dụng lượng file tối đa 1 MB</div>
+              <div>Định dạng: .JPG, .JPEG, .PNG</div>
+            </div>
             {/* Image */}
+            <InputFile onChange={handleFileChange} />
             <div className='my-5 h-24 w-24'>
               <img
                 src={previewImage || getAvatarUrl(avatarForm)}
                 alt='avatar'
                 className='h-full w-full rounded-full object-cover'
               />
-            </div>
-            {/* [HIDDEN] Select image button */}
-            <input
-              className='hidden'
-              type='file'
-              accept='.jpg,.jpeg,.png'
-              ref={fileInputRef}
-              onChange={handleFileChange}
-              onClick={(event) => {
-                ;(event.target as any).value = null
-              }}
-            />
-            <button
-              onClick={handleUploadAvatar}
-              type='button'
-              className='flex h-10 items-center justify-end rounded-sm border bg-white px-6 text-sm text-gray-600 shadow-sm hover:border-shopee_orange'
-            >
-              Chọn ảnh
-            </button>
-            <div className='mt-3 text-gray-400'>
-              <div>Dụng lượng file tối đa 1 MB</div>
-              <div>Định dạng: .JPG, .JPEG, .PNG</div>
             </div>
           </div>
         </div>
