@@ -4,12 +4,15 @@ import MainLayout from '@/layouts/MainLayout'
 import Login from '@/pages/Login'
 import ProductList from '@/pages/ProductList'
 import Register from '@/pages/Register'
-import Profile from '@/pages/Profile'
 import { AppContext } from '@/contexts/app.context'
 import { useContext } from 'react'
 import ProductDetail from '@/pages/ProductDetail'
 import Cart from '@/pages/Cart'
 import CartLayout from '@/layouts/CartLayout'
+import UserLayout from '@/pages/User/layouts/UserLayout/UserLayout'
+import Profile from '@/pages/User/pages/Profile'
+import ChangePassword from '@/pages/User/pages/ChangePassword'
+import HistoryPurchase from '@/pages/User/pages/HistoryPurchase'
 
 /* đã login/register */
 function ProtectedRoute() {
@@ -48,20 +51,34 @@ export default function useRoutesElements() {
       element: <ProtectedRoute />,
       children: [
         {
-          path: '/profile',
-          element: (
-            <MainLayout>
-              <Profile />
-            </MainLayout>
-          )
-        },
-        {
           path: '/cart',
           element: (
             <CartLayout>
               <Cart />
             </CartLayout>
           )
+        },
+        {
+          path: '/user',
+          element: (
+            <MainLayout>
+              <UserLayout />
+            </MainLayout>
+          ),
+          children: [
+            {
+              path: '/user/profile',
+              element: <Profile />
+            },
+            {
+              path: '/user/password',
+              element: <ChangePassword />
+            },
+            {
+              path: '/user/history',
+              element: <HistoryPurchase />
+            }
+          ]
         }
       ]
     },
