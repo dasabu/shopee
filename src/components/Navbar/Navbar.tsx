@@ -5,6 +5,7 @@ import Popover from '../Popover'
 import { logoutApi } from '@/apis/auth.api'
 import { PURCHASES_STATUS } from '@/utils/constants'
 import { AppContext } from '@/contexts/app.context'
+import { getAvatarUrl } from '@/utils/avatar'
 
 export default function Navbar() {
   const { setIsAuthenticated, isAuthenticated, setProfile, profile } =
@@ -80,7 +81,7 @@ export default function Navbar() {
           popoverOptions={
             <div className='relative rounded-sm border border-gray-200 bg-white shadow-md'>
               <Link
-                to='/profile'
+                to='/user/profile'
                 className='block w-full bg-white py-3 px-4 text-left hover:bg-slate-100 hover:text-cyan-500'
               >
                 Tài khoản của tôi
@@ -102,10 +103,7 @@ export default function Navbar() {
         >
           <div className='mr-2 h-6 w-6 flex-shrink-0'>
             <img
-              src={
-                profile?.avatar ||
-                'https://cf.shopee.vn/file/d04ea22afab6e6d250a370d7ccc2e675_tn'
-              }
+              src={getAvatarUrl(profile?.avatar)}
               alt='avatar'
               className='h-full w-full rounded-full object-cover'
             />

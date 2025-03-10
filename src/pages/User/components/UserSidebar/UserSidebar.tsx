@@ -1,4 +1,5 @@
 import { AppContext } from '@/contexts/app.context'
+import { getAvatarUrl } from '@/utils/avatar'
 import { useContext } from 'react'
 import { Link } from 'react-router-dom'
 
@@ -12,10 +13,7 @@ export default function UserSideNav() {
           className='h-12 w-12 flex-shrink-0 overflow-hidden rounded-full border border-black/10'
         >
           <img
-            src={
-              profile?.avatar ||
-              'https://cf.shopee.vn/file/d04ea22afab6e6d250a370d7ccc2e675_tn'
-            }
+            src={getAvatarUrl(profile?.avatar)}
             alt=''
             className='h-full w-full object-cover'
           />

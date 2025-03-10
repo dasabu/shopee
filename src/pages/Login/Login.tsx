@@ -6,8 +6,7 @@ import { toast } from 'react-toastify'
 import { useContext } from 'react'
 
 import Input from '@/components/Input'
-import { isAxios422Error } from '@/utils/error'
-import { ErrorResponse } from '@/types/utils.type'
+import { handleAxios422Error } from '@/utils/error'
 import { AuthCredentials } from '@/types/auth.type'
 import { loginApi } from '@/apis/auth.api'
 import { AppContext } from '@/contexts/app.context'
@@ -43,16 +42,7 @@ export default function Login() {
         navigate('/')
       },
       onError: (error) => {
-        if (isAxios422Error<ErrorResponse<AuthCredentials>>(error)) {
-          const authFormError = error.response?.data.data
-          if (authFormError) {
-            Object.keys(authFormError).forEach((key) => {
-              setError(key as keyof AuthCredentials, {
-                message: authFormError[key as keyof AuthCredentials]
-              })
-            })
-          }
-        }
+        handleAxios422Error<AuthCredentials>(error, setError)
       }
     })
   })
