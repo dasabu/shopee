@@ -13,6 +13,7 @@ import UserLayout from '@/pages/User/layouts/UserLayout/UserLayout'
 import Profile from '@/pages/User/pages/Profile'
 import ChangePassword from '@/pages/User/pages/ChangePassword'
 import PurchaseHistory from '@/pages/User/pages/PurchaseHistory/PurchaseHistory'
+import NotFound from '@/pages/NotFound'
 
 /* đã login/register */
 function ProtectedRoute() {

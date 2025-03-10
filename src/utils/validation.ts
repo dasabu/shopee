@@ -50,4 +50,17 @@ export const formSchema = yup.object({
   name: yup.string().trim().required() // product name
 })
 
+export const userSchema = yup.object({
+  name: yup.string().max(160, 'Tên tối đa 160 ký tự'),
+  phone: yup.string().max(20, 'Số điện thoại tối đa 20 ký tự'),
+  address: yup.string().max(160, 'Địa chỉ tối đa 160 ký tự'),
+  date_of_birth: yup.date().max(new Date(), 'Ngày không hợp lệ'),
+  avatar: yup.string().max(1000, 'Ảnh tối đa 1000 ký tự'),
+  password: formSchema.fields['password'],
+  new_password: formSchema.fields['password'],
+  confirm_password: formSchema.fields['confirm_password']
+})
+
 export type FormSchema = yup.InferType<typeof formSchema>
+
+export type UserSchema = yup.InferType<typeof userSchema>
