@@ -8,6 +8,17 @@ export type AuthCredentials = {
 
 export type AuthResponse = SuccessResponse<{
   access_token: string
-  expires: string
+  expires: number // access token
+  refresh_token: string
+  expires_refresh_token: number
   user: User
 }>
+
+export type RefreshTokenResponse = SuccessResponse<{
+  access_token: string
+}>
+
+export type _401Response = {
+  message: string
+  name: string
+}

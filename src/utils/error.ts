@@ -1,3 +1,4 @@
+import { _401Response } from '@/types/auth.type'
 import { ErrorResponse } from '@/types/utils.type'
 import axios, { AxiosError } from 'axios'
 import { FieldValues, Path, UseFormSetError } from 'react-hook-form'
@@ -6,6 +7,19 @@ import { FieldValues, Path, UseFormSetError } from 'react-hook-form'
 // else -> typeof error = never
 export function isAxiosError<T>(error: unknown): error is AxiosError<T> {
   return axios.isAxiosError(error)
+}
+
+export function isAxios401Error<T>(error: unknown): error is AxiosError<T> {
+  return isAxiosError(error) && error.response?.status === 401
+}
+
+export function isAxiosExpiredTokenError<T>(
+  error: unknown
+): error is AxiosError<T> {
+  return (
+    isAxios401Error<ErrorResponse<_401Response>>(error) &&
+    error.response?.data.data?.name === 'EXPIRED_TOKEN'
+  )
 }
 
 export function isAxios422Error<T>(error: unknown): error is AxiosError<T> {

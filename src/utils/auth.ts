@@ -4,7 +4,7 @@ import { CLEAR_LS_EVENT } from './constants'
 export const LocalStorageEventTarget = new EventTarget()
 
 /**
- * Local Storage
+ * Access token
  */
 export const saveAccessTokenToLS = (access_token: string) => {
   localStorage.setItem('access_token', access_token)
@@ -16,6 +16,22 @@ export const clearAccessTokenFromLS = () => {
 
 export const getAccessTokenFromLS = () => {
   return localStorage.getItem('access_token') || ''
+}
+
+/**
+ * Refresh token
+ */
+
+export const saveRefreshTokenToLS = (refresh_token: string) => {
+  localStorage.setItem('refresh_token', refresh_token)
+}
+
+export const clearRefreshTokenFromLS = () => {
+  localStorage.removeItem('refresh_token')
+}
+
+export const getRefreshTokenFromLS = () => {
+  return localStorage.getItem('refresh_token') || ''
 }
 
 /**
@@ -38,5 +54,6 @@ export const clearProfileFromLS = () => {
 export const clearLS = () => {
   clearAccessTokenFromLS()
   clearProfileFromLS()
+  clearRefreshTokenFromLS()
   LocalStorageEventTarget.dispatchEvent(new Event(CLEAR_LS_EVENT))
 }
