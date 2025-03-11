@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom'
-import ShopeeLogo from '@/assets/shopee-logo.svg'
 
 export default function AuthHeader() {
   return (
@@ -7,7 +6,11 @@ export default function AuthHeader() {
       <div className='max-w-7xl mx-auto px-4'>
         <nav className='flex items-end'>
           <Link to='/'>
-            <img className='h-10 lg:h-12' src={ShopeeLogo} alt='Shopee Logo' />
+            <img
+              className='h-10 lg:h-12'
+              src='/src/assets/shopee-logo.svg'
+              alt='Shopee Logo'
+            />
           </Link>
         </nav>
       </div>

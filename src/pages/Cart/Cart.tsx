@@ -16,7 +16,6 @@ import { produce } from 'immer'
 import { keyBy } from 'lodash'
 import { toast } from 'react-toastify'
 import { AppContext } from '@/contexts/app.context'
-import NoProductFound from '@/assets/no-product-found.png'
 
 export default function Cart() {
   const { data: purchasesInCartData, refetch } = useQuery({
@@ -342,7 +341,7 @@ export default function Cart() {
             ) : (
               <div className='flex justify-center items-center p-10 bg-white my-3 border shadow'>
                 <img
-                  src={NoProductFound}
+                  src='/src/assets/no-product-found.png'
                   alt='No products found'
                   className='w-60 h-30'
                 />
