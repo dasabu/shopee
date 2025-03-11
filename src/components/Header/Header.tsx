@@ -8,6 +8,7 @@ import { PURCHASES_STATUS } from '@/utils/constants'
 import { getPurchaseListApi } from '@/apis/purchase.api'
 import useSearchProducts from '@/hooks/useSearchProducts'
 import Navbar from '../Navbar'
+import NoProductFound from '@/assets/no-product-found.png'
 
 const MAX_PREVIEW_PURCHASES = 5
 
@@ -124,7 +125,7 @@ export default function Header() {
                   ) : (
                     <div className='flex h-[200px] w-[300px] flex-col items-center justify-center p-2'>
                       <img
-                        src='/src/assets/no-product-found.png'
+                        src={NoProductFound}
                         alt='no-product-found'
                         className='h-24 w-48'
                       />
