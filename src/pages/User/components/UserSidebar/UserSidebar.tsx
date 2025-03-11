@@ -1,7 +1,7 @@
 import { AppContext } from '@/contexts/app.context'
 import { getAvatarUrl } from '@/utils/avatar'
 import { useContext } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 
 export default function UserSideNav() {
   const { profile } = useContext(AppContext)
@@ -43,10 +43,12 @@ export default function UserSideNav() {
           </Link>
         </div>
       </div>
-      <div className='mt-7'>
-        <Link
+      <div className='mt-7 space-y-4'>
+        <NavLink
           to='/user/profile'
-          className='flex items-center capitalize text-shopee_orange transition-colors'
+          className={({ isActive }) =>
+            `flex items-center capitalize transition-colors ${isActive ? 'text-shopee_orange' : 'text-gray-600'}`
+          }
         >
           <div className='mr-3 h-[22px] w-[22px]'>
             <img
@@ -56,10 +58,12 @@ export default function UserSideNav() {
             />
           </div>
           Tài khoản của tôi
-        </Link>
-        <Link
+        </NavLink>
+        <NavLink
           to='/user/password'
-          className='mt-4 flex items-center capitalize text-gray-600 transition-colors'
+          className={({ isActive }) =>
+            `flex items-center capitalize transition-colors ${isActive ? 'text-shopee_orange' : 'text-gray-600'}`
+          }
         >
           <div className='mr-3 h-[22px] w-[22px]'>
             <img
@@ -69,10 +73,12 @@ export default function UserSideNav() {
             />
           </div>
           Đổi mật khẩu
-        </Link>
-        <Link
+        </NavLink>
+        <NavLink
           to='/user/history'
-          className='mt-4 flex items-center capitalize text-gray-600 transition-colors'
+          className={({ isActive }) =>
+            `flex items-center capitalize transition-colors ${isActive ? 'text-shopee_orange' : 'text-gray-600'}`
+          }
         >
           <div className='mr-3 h-[22px] w-[22px]'>
             <img
@@ -82,7 +88,7 @@ export default function UserSideNav() {
             />
           </div>
           Đơn mua
-        </Link>
+        </NavLink>
       </div>
     </div>
   )

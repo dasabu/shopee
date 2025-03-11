@@ -8,7 +8,8 @@ import { useContext } from 'react'
 
 import { FormSchema, formSchema } from '@/utils/validation'
 import Input from '@/components/Input'
-import { handleAxios422Error } from '@/utils/error'
+import { handleAxios422Error, isAxios422Error } from '@/utils/error'
+import { ErrorResponse } from '@/types/utils.type'
 import { AuthCredentials } from '@/types/auth.type'
 import { registerApi } from '@/apis/auth.api'
 import { AppContext } from '@/contexts/app.context'
@@ -51,7 +52,9 @@ export default function Register() {
         navigate('/')
       },
       onError: (error) => {
-        handleAxios422Error<AuthCredentials>(error, setError)
+        if (isAxios422Error<ErrorResponse<AuthCredentials>>(error)) {
+          handleAxios422Error<AuthCredentials>(error, setError)
+        }
       }
     })
   })

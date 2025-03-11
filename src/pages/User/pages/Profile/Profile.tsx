@@ -1,3 +1,8 @@
+import { Controller, useForm } from 'react-hook-form'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { toast } from 'react-toastify'
+
 import {
   getProfileApi,
   updateProfileApi,
@@ -7,16 +12,13 @@ import Button from '@/components/Button'
 import Input from '@/components/Input'
 import InputNumber from '@/components/InputNumber'
 import { userSchema, UserSchema } from '@/utils/validation'
-import { yupResolver } from '@hookform/resolvers/yup'
-import { useMutation, useQuery } from '@tanstack/react-query'
 import { useContext, useEffect, useMemo, useState } from 'react'
-import { Controller, useForm } from 'react-hook-form'
 import DateSelect from '../../components/DateSelect'
-import { toast } from 'react-toastify'
 import { AppContext } from '@/contexts/app.context'
 import { saveProfileToLS } from '@/utils/auth'
 import { getAvatarUrl } from '@/utils/avatar'
-import { handleAxios422Error } from '@/utils/error'
+import { handleAxios422Error, isAxios422Error } from '@/utils/error'
+import { ErrorResponse } from '@/types/utils.type'
 import InputFile from '@/components/InputFile'
 
 type ProfileFormData = Pick<
@@ -124,7 +126,9 @@ export default function Profile() {
       setProfile(response.data.data)
       saveProfileToLS(response.data.data)
     } catch (error) {
-      handleAxios422Error<ProfileFormDataError>(error, setError)
+      if (isAxios422Error<ErrorResponse<ProfileFormDataError>>(error)) {
+        handleAxios422Error<ProfileFormDataError>(error, setError)
+      }
     }
   })
 
@@ -243,12 +247,7 @@ export default function Profile() {
         {/* Avatar */}
         <div className='flex justify-center md:w-72 md:border-l md:border-l-gray-200'>
           <div className='flex flex-col items-center'>
-            <div className='mt-3 text-gray-400'>
-              <div>Dụng lượng file tối đa 1 MB</div>
-              <div>Định dạng: .JPG, .JPEG, .PNG</div>
-            </div>
             {/* Image */}
-            <InputFile onChange={handleFileChange} />
             <div className='my-5 h-24 w-24'>
               <img
                 src={previewImage || getAvatarUrl(avatarForm)}
@@ -256,6 +255,11 @@ export default function Profile() {
                 className='h-full w-full rounded-full object-cover'
               />
             </div>
+            <div className='my-3 text-gray-400'>
+              <div>Dụng lượng file tối đa 1 MB</div>
+              <div>Định dạng: .JPG, .JPEG, .PNG</div>
+            </div>
+            <InputFile onChange={handleFileChange} />
           </div>
         </div>
       </form>

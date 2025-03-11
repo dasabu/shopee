@@ -1,5 +1,3 @@
-import { string } from 'yup'
-
 type Role = 'User' | 'Admin'
 
 export interface User {
@@ -19,5 +17,5 @@ export interface User {
 export interface UpdateUserRequest
   extends Omit<User, '_id' | 'email' | 'roles' | 'createdAt' | 'updatedAt'> {
   password?: string
-  newPassword?: string
+  new_password?: string
 }
