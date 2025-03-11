@@ -29,16 +29,16 @@ export default function Navbar() {
   }
 
   return (
-    <div className='flex justify-end py-1'>
+    <div className='flex justify-end'>
       <Popover
-        className='flex cursor-pointer items-center py-1 hover:text-white/70'
+        className='flex cursor-pointer items-center hover:text-white/70'
         popoverOptions={
           <div className='relative rounded-sm border border-gray-200 bg-white shadow-md'>
-            <div className='flex flex-col py-2 pr-28 pl-3'>
-              <button className='py-2 px-3 hover:text-orange'>
+            <div className='flex flex-col py-2 px-2'>
+              <button className='py-2 px-4 hover:text-shopee_orange'>
                 Tiếng Việt
               </button>
-              <button className='mt-2 py-2 px-3 hover:text-orange'>
+              <button className='mt-2 py-2 px-4 hover:text-shopee_orange'>
                 English
               </button>
             </div>
