@@ -12,6 +12,7 @@ import QuantityController from './components/QuantityController'
 import { addToCartApi } from '@/apis/purchase.api'
 import { PURCHASES_STATUS } from '@/utils/constants'
 import { toast } from 'react-toastify'
+import NotFound from '../NotFound'
 
 export default function ProductDetail() {
   const { slug } = useParams()
@@ -22,7 +23,7 @@ export default function ProductDetail() {
   /**
    * Product Detail
    */
-  const { data: productDetailData } = useQuery({
+  const { data: productDetailData, isError } = useQuery({
     queryKey: ['product', id],
     queryFn: () => getProductDetailApi(id as string)
   })
@@ -154,6 +155,7 @@ export default function ProductDetail() {
     navigate('/cart', { state: { purchaseId: purchase._id } })
   }
 
+  if (isError) return <NotFound />
   if (!product) return null
   return (
     <div className='bg-gray-200 py-6'>

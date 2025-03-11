@@ -124,7 +124,7 @@ export default function Header() {
                   ) : (
                     <div className='flex h-[200px] w-[300px] flex-col items-center justify-center p-2'>
                       <img
-                        src='src/assets/no-product-found.png'
+                        src='/src/assets/no-product-found.png'
                         alt='no-product-found'
                         className='h-24 w-48'
                       />

@@ -56,7 +56,7 @@ export default function HistoryPurchase() {
                 className='mt-4 rounded-sm border-black/10 bg-white p-6 text-gray-800 shadow-sm'
               >
                 <Link
-                  to={`/${generateSlug(purchase.product.name, purchase.product._id)}`}
+                  to={`/products/${generateSlug(purchase.product.name, purchase.product._id)}`}
                   className='flex'
                 >
                   <div className='flex-shrink-0'>

@@ -31,24 +31,6 @@ export default function useRoutesElements() {
   const routesElements = useRoutes([
     {
       path: '/',
-      index: true,
-      element: (
-        <MainLayout>
-          <ProductList />
-        </MainLayout>
-      )
-    },
-    {
-      path: '/:slug',
-      index: true,
-      element: (
-        <MainLayout>
-          <ProductDetail />
-        </MainLayout>
-      )
-    },
-    {
-      path: '/',
       element: <ProtectedRoute />,
       children: [
         {
@@ -104,6 +86,31 @@ export default function useRoutesElements() {
           )
         }
       ]
+    },
+    {
+      path: '/products/:slug',
+      element: (
+        <MainLayout>
+          <ProductDetail />
+        </MainLayout>
+      )
+    },
+    {
+      path: '/',
+      index: true,
+      element: (
+        <MainLayout>
+          <ProductList />
+        </MainLayout>
+      )
+    },
+    {
+      path: '*',
+      element: (
+        <MainLayout>
+          <NotFound />
+        </MainLayout>
+      )
     }
   ])
   return routesElements
