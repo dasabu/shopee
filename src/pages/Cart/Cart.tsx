@@ -247,7 +247,7 @@ export default function Cart() {
                           <div className='flex'>
                             <Link
                               className='h-20 w-20 flex-shrink-0'
-                              to={`/${generateSlug(
+                              to={`/products/${generateSlug(
                                 purchase.product.name,
                                 purchase.product._id
                               )}`}
@@ -259,7 +259,7 @@ export default function Cart() {
                             </Link>
                             <div className='flex-grow px-2 pt-1 pb-2'>
                               <Link
-                                to={`/${generateSlug(
+                                to={`/products/${generateSlug(
                                   purchase.product.name,
                                   purchase.product._id
                                 )}`}

@@ -6,7 +6,7 @@ import { generateSlug } from '@/utils/slug'
 
 export default function ProductCard({ product }: { product: Product }) {
   return (
-    <Link to={`/${generateSlug(product.name, product._id)}`}>
+    <Link to={`/products/${generateSlug(product.name, product._id)}`}>
       <div className='bg-white shadow rounded-sm hover:translate-y-[-0.04rem] hover:shadow-md duration-100 transition-transform overflow-hidden'>
         <div className='w-full pt-[100%] relative'>
           <img

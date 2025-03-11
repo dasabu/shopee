@@ -19,3 +19,7 @@ export const PURCHASES_STATUS = {
   DELIVERED: 4,
   CANCELLED: 5
 } as const
+
+export const CLEAR_LS_EVENT = 'clearLS'
+
+export const MAX_FILE_SIZE = 1024 * 1024 // 1MB = 1024 * 1024 bytes

@@ -73,7 +73,7 @@ export default function Header() {
             <Popover
               popoverOptions={
                 <div className='relative max-w-[400px] rounded-sm border border-gray-200 bg-white text-sm shadow-md'>
-                  {purchasesInCart ? (
+                  {purchasesInCart && purchasesInCart.length > 0 ? (
                     <div className='p-2'>
                       <div className='capitalize text-gray-400'>
                         Sản phẩm mới thêm
@@ -122,13 +122,15 @@ export default function Header() {
                       </div>
                     </div>
                   ) : (
-                    <div className='flex h-[300px] w-[300px] flex-col items-center justify-center p-2'>
+                    <div className='flex h-[200px] w-[300px] flex-col items-center justify-center p-2'>
                       <img
-                        src='src/assets/no-product-found.png'
-                        alt='no purchase'
-                        className='h-24 w-24'
+                        src='/src/assets/no-product-found.png'
+                        alt='no-product-found'
+                        className='h-24 w-48'
                       />
-                      <div className='mt-3 capitalize'>Chưa có sản phẩm</div>
+                      <div className='mt-5 capitalize text-gray-400'>
+                        Chưa có sản phẩm
+                      </div>
                     </div>
                   )}
                 </div>

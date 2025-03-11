@@ -8,9 +8,9 @@ import { useContext } from 'react'
 
 import { FormSchema, formSchema } from '@/utils/validation'
 import Input from '@/components/Input'
-import { isAxios422Error } from '@/utils/error'
-import { AuthCredentials } from '@/types/auth.type'
+import { handleAxios422Error, isAxios422Error } from '@/utils/error'
 import { ErrorResponse } from '@/types/utils.type'
+import { AuthCredentials } from '@/types/auth.type'
 import { registerApi } from '@/apis/auth.api'
 import { AppContext } from '@/contexts/app.context'
 import Button from '@/components/Button'
@@ -52,51 +52,8 @@ export default function Register() {
         navigate('/')
       },
       onError: (error) => {
-        // Hiển thị lỗi cho từng input
         if (isAxios422Error<ErrorResponse<AuthCredentials>>(error)) {
-          // Trong trường hợp lỗi 422 thì error là object như sau:
-          // error: AxiosError<ErrorResponse<AuthCredentials>>:
-          //        message:  string
-          //        code:     string
-          //        response: ErrorResponse<AuthCredentials>
-          //                  status: number
-          //                  statusText: string
-          //                  data: AuthCredentials
-          //                        email: string
-          //                        password: string
-
-          // error.message: 'Request failed with status code 422'
-          // error.code:    'ERR_BAD_REQUEST'
-          // error.response
-          //               .status:     422
-          //               .statusText: ''
-          //               .data
-          //                    .message:    'Lỗi'
-          //                    .data
-          //                         .email?:    // If an error exists in the email input
-          //                         .password?: // If an error exists in the password input
-
-          const authFormError = error.response?.data.data
-          // Trong trường hợp object không có nhiều field (chỉ có email và password) thì có thể làm như sau:
-          // if (authInputError?.email) {
-          //   setError('email', {
-          //     message: authInputError.email
-          //   })
-          // }
-          // if (authInputError?.password) {
-          //   setError('password', {
-          //     message: authInputError.password
-          //   })
-          // }
-
-          // Nhưng đối với object có rất nhiều field: lặp qua từng field và check
-          if (authFormError) {
-            Object.keys(authFormError).forEach((key) => {
-              setError(key as keyof AuthCredentials, {
-                message: authFormError[key as keyof AuthCredentials]
-              })
-            })
-          }
+          handleAxios422Error<AuthCredentials>(error, setError)
         }
       }
     })
