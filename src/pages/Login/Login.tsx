@@ -75,6 +75,7 @@ export default function Login() {
                 register={register}
                 errorMessage={errors?.password?.message}
                 autoComplete='on'
+                classNameVisible='absolute top-[14px] right-[10px] size-4 cursor-pointer'
               />
               <div>
                 <Button

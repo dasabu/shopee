@@ -5,6 +5,7 @@ interface InputProps<T extends FieldValues>
   extends InputHTMLAttributes<HTMLInputElement> {
   classNameInput?: string // css cho input
   classNameError?: string // css cho error message
+  classNameVisible?: string // css cho visible icon
   errorMessage?: string
 
   /* React Hook Form */
@@ -18,6 +19,7 @@ export default function Input<T extends FieldValues>({
   errorMessage,
   classNameInput = 'p-3 w-full outline-none border border-gray-300 focus:border-gray-500 rounded-sm focus:shadow-sm',
   classNameError = 'my-2 text-red-600 min-h-[1.25rem] text-sm',
+  classNameVisible = 'absolute top-[10px] right-[10px] size-4 cursor-pointer',
   register,
   name,
   className,
@@ -35,7 +37,7 @@ export default function Input<T extends FieldValues>({
     return rest.type
   }
   return (
-    <div className={className}>
+    <div className={`relative ${className}`}>
       <input
         className={classNameInput}
         {...(register && name ? register(name) : {})} // có register và name mới truyền vào
@@ -47,7 +49,7 @@ export default function Input<T extends FieldValues>({
           xmlns='http://www.w3.org/2000/svg'
           viewBox='0 0 24 24'
           fill='currentColor'
-          className='absolute top-[10px] right-[10px] size-4 cursor-pointer'
+          className={classNameVisible}
           onClick={toggleVisible}
         >
           <path d='M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z' />
@@ -63,7 +65,7 @@ export default function Input<T extends FieldValues>({
           xmlns='http://www.w3.org/2000/svg'
           viewBox='0 0 24 24'
           fill='currentColor'
-          className='absolute top-[10px] right-[10px] size-4 cursor-pointer'
+          className={classNameVisible}
           onClick={toggleVisible}
         >
           <path d='M3.53 2.47a.75.75 0 0 0-1.06 1.06l18 18a.75.75 0 1 0 1.06-1.06l-18-18ZM22.676 12.553a11.249 11.249 0 0 1-2.631 4.31l-3.099-3.099a5.25 5.25 0 0 0-6.71-6.71L7.759 4.577a11.217 11.217 0 0 1 4.242-.827c4.97 0 9.185 3.223 10.675 7.69.12.362.12.752 0 1.113Z' />

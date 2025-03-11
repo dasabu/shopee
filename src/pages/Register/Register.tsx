@@ -84,6 +84,7 @@ export default function Register() {
                 register={register}
                 errorMessage={errors?.password?.message as string}
                 autoComplete='on'
+                classNameVisible='absolute top-[14px] right-[10px] size-4 cursor-pointer'
               />
               <Input<RegisterFormData>
                 type='password'
@@ -92,6 +93,7 @@ export default function Register() {
                 register={register}
                 errorMessage={errors?.confirm_password?.message as string}
                 autoComplete='on'
+                classNameVisible='absolute top-[14px] right-[10px] size-4 cursor-pointer'
               />
               <div className='mt-5'>
                 <Button
