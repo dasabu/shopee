@@ -10,6 +10,7 @@ import { useForm, Controller, Resolver } from 'react-hook-form'
 import { Link, useNavigate } from 'react-router-dom'
 import RatingFilter from '../RatingFilter'
 import { omit } from 'lodash'
+import { useTranslation } from 'react-i18next'
 
 type PriceRangeFormData = NoUndefinedField<
   Pick<FormSchema, 'price_min' | 'price_max'>
@@ -26,6 +27,7 @@ export default function FilterSidebar({
 }: FilterSidebarProps) {
   const navigate = useNavigate()
   const { category: categoryOption } = queryParams // category lấy từ URL
+  const { t } = useTranslation(['home'])
 
   const {
     control,
@@ -85,7 +87,7 @@ export default function FilterSidebar({
             </g>
           </g>
         </svg>
-        Tất cả danh mục
+        {t('filter_sidebar.all_categories')}
       </Link>
       <div className='bg-gray-300 h-[1px] my-4' />
       <ul>
@@ -133,7 +135,7 @@ export default function FilterSidebar({
             />
           </g>
         </svg>
-        Bộ lọc tìm kiếm
+        {t('filter_sidebar.search_filter')}
       </Link>
       <div className='bg-gray-300 h-[1px] my-4' />
       <div className='my-5'>

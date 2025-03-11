@@ -13,12 +13,14 @@ import { addToCartApi } from '@/apis/purchase.api'
 import { PURCHASES_STATUS } from '@/utils/constants'
 import { toast } from 'react-toastify'
 import NotFound from '../NotFound'
+import { useTranslation } from 'react-i18next'
 
 export default function ProductDetail() {
   const { slug } = useParams()
   const id = getIdFromSlug(slug as string)
 
   const navigate = useNavigate()
+  const { t } = useTranslation(['product'])
 
   /**
    * Product Detail
@@ -284,7 +286,7 @@ export default function ProductDetail() {
                   max={product.quantity}
                 />
                 <div className='ml-6 text-sm text-gray-500'>
-                  {product.quantity} sản phẩm có sẵn
+                  {product.quantity} {t('available_products')}
                 </div>
               </div>
               <div className='mt-8 flex items-center'>
